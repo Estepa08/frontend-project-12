@@ -1,22 +1,138 @@
-/* frontend/src/components/pages/LoginPage.module.css */
+/* frontend/src/components/pages/LoginPage/LoginPage.module.css */
 
-.loginContainer {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f0f2f5;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-.loginCard {
-  width: 400px;
+.card {
+  width: 420px;
+  max-width: 90%;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  padding: 8px;
 }
 
-.loginTitle {
+.title {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 8px !important;
+  color: #1a1a2e;
+  font-weight: 700 !important;
 }
 
-.loginLink {
+.subtitle {
   text-align: center;
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.fieldGroup {
+  margin-bottom: 20px;
+}
+
+.fieldGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.fieldInput {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.fieldInput:focus {
+  outline: none;
+  border-color: #4a6cf7;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.15);
+}
+
+.fieldInput::placeholder {
+  color: #aaa;
+}
+
+.error {
+  border-color: #ff4d4f !important;
+  background: #fff2f0 !important;
+}
+
+.error:focus {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.15) !important;
+}
+
+.errorMessage {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.linkWrapper {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.linkWrapper a {
+  color: #4a6cf7;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.linkWrapper a:hover {
+  color: #3a56d4;
+  text-decoration: underline;
+}
+
+/* Стиль для кнопки входа */
+.submitButton {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  background: #4a6cf7;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover {
+  background: #3a56d4;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 108, 247, 0.35);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 480px) {
+  .card {
+    padding: 16px;
+  }
+  
+  .title {
+    font-size: 22px !important;
+  }
+  
+  .fieldInput {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
 }
