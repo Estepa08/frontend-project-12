@@ -1,0 +1,348 @@
+/* frontend/src/components/pages/ChatPage/ChatPage.module.css */
+
+/* Основной Layout */
+.layout {
+  min-height: 100vh;
+}
+
+/* Сайдбар с каналами */
+.sider {
+  background: #001529;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+}
+
+.logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 8px;
+}
+
+.logoIcon {
+  font-size: 24px;
+}
+
+/* Список каналов */
+.channelList {
+  padding: 12px 0;
+}
+
+.channelItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  margin: 2px 8px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.channelItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.channelItemActive {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.channelItemActive:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.channelItemIcon {
+  font-size: 16px;
+}
+
+.channelItemName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.channelItemBadge {
+  background: #1677ff;
+  color: #fff;
+  font-size: 11px;
+  padding: 0 8px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Хедер */
+.header {
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toggleButton {
+  font-size: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.toggleButton:hover {
+  background: #f5f5f5;
+}
+
+.username {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Контент чата */
+.content {
+  margin: 0;
+  padding: 0;
+  min-height: calc(100vh - 64px);
+  background: #f5f7fa;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Контейнер сообщений */
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  padding: 20px 24px;
+  background: #f5f7fa;
+}
+
+/* Список сообщений */
+.messageList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 4px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Отдельное сообщение */
+.messageItem {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  max-width: 75%;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.messageItemSelf {
+  background: #e6f7ff;
+  border: 1px solid #bae7ff;
+  align-self: flex-end;
+}
+
+.messageAvatar {
+  flex-shrink: 0;
+}
+
+.messageContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.messageHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.messageUsername {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a2e;
+}
+
+.messageTime {
+  font-size: 11px;
+  color: #999;
+}
+
+.messageText {
+  font-size: 14px;
+  color: #333;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* Пустое состояние */
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  padding: 60px 20px;
+}
+
+.emptyStateIcon {
+  font-size: 56px;
+  color: #d9d9d9;
+  margin-bottom: 16px;
+}
+
+.emptyStateTitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.emptyStateText {
+  font-size: 14px;
+  color: #bbb;
+}
+
+/* Поле ввода */
+.messageInputWrapper {
+  display: flex;
+  gap: 12px;
+  padding: 16px 4px 0;
+  border-top: 1px solid #e8e8e8;
+  background: #f5f7fa;
+  align-items: flex-end;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 0.2s;
+  background: #ffffff;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  min-height: 42px;
+  max-height: 120px;
+}
+
+.messageInput:focus {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.15);
+}
+
+.messageInput:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.sendButton {
+  padding: 0 24px;
+  height: 42px;
+  border-radius: 12px;
+  background: #1677ff;
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.sendButton:hover {
+  background: #0958d9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
+}
+
+.sendButton:active {
+  transform: translateY(0);
+}
+
+.sendButton:disabled {
+  background: #d9d9d9;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+  }
+
+  .headerRight .username {
+    display: none;
+  }
+
+  .messageItem {
+    max-width: 90%;
+    padding: 10px 14px;
+  }
+
+  .messageInputWrapper {
+    padding: 12px 0 0;
+    flex-wrap: wrap;
+  }
+
+  .sendButton {
+    padding: 0 16px;
+    font-size: 13px;
+    height: 38px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .messageContainer {
+    padding: 12px 16px;
+  }
+
+  .logo span {
+    display: none;
+  }
+}
