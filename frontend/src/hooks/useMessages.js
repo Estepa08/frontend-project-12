@@ -1,59 +1,69 @@
 // frontend/src/hooks/useMessages.js
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { messageService } from '../services/messageService';
+import { useAuth } from './useAuth';
+import {
+  selectMessagesByChannel,
+  addOptimisticMessage,
+  confirmMessage,
+  failMessage,
+  addMessage,
+} from '../slices/messagesSlice';
 
 export const useMessages = (channelId) => {
-  const [messages, setMessages] = useState([]);
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+
+  const messages = useSelector((state) => selectMessagesByChannel(state, channelId));
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSending, setIsSending] = useState(false);
 
-  // Загрузка сообщений
-  const loadMessages = useCallback(async () => {
-    if (!channelId) return;
-
+  const loadMessages = async () => {
     setLoading(true);
     setError(null);
-
     try {
-      const data = await messageService.getMessages(channelId);
-      setMessages(data);
+      const data = await messageService.getAll();
+      data.forEach((msg) => dispatch(addMessage(msg)));
     } catch (err) {
       setError(err.message || 'Ошибка загрузки сообщений');
     } finally {
       setLoading(false);
     }
-  }, [channelId]);
+  };
 
-  // Отправка сообщения
-  const sendMessage = useCallback(
-    async (text) => {
-      if (!text?.trim() || isSending) return;
+  const sendMessage = async (text) => {
+    if (!text?.trim()) return;
 
-      setIsSending(true);
-      setError(null);
+    const tempId = crypto.randomUUID();
+    dispatch(addOptimisticMessage({ tempId, body: text, channelId, username: user }));
 
-      try {
-        const newMessage = await messageService.sendMessage(channelId, text);
-        setMessages((prev) => [...prev, newMessage]);
-        return newMessage;
-      } catch (err) {
-        setError(err.message || 'Ошибка отправки сообщения');
-        throw err;
-      } finally {
-        setIsSending(false);
-      }
-    },
-    [channelId, isSending]
-  );
+    setIsSending(true);
+    setError(null);
+    try {
+      const response = await messageService.create({
+        body: text,
+        channelId,
+        username: user,
+        tempId,
+      });
+      dispatch(confirmMessage({ tempId, realMessage: response }));
+    } catch (err) {
+      dispatch(failMessage({ tempId }));
+      setError(err.message || 'Ошибка отправки сообщения');
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return {
     messages,
     loading,
     error,
     isSending,
-    sendMessage,
     loadMessages,
-    setMessages,
+    sendMessage,
   };
 };

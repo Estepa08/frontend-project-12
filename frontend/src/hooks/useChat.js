@@ -1,36 +1,24 @@
 // frontend/src/hooks/useChat.js
-import { useDispatch, useSelector } from 'react-redux';
 import { useAuth } from './useAuth';
-import { selectChannels, selectActiveChannelId } from '../slices/channelsSlice';
-import { selectMessagesByChannel, addMessage } from '../slices/messagesSlice';
+import { useChannels } from './useChannels';
+import { useMessages } from './useMessages';
 
 export const useChat = () => {
-  const dispatch = useDispatch();
   const { user } = useAuth();
-
-  // Данные из Redux
-  const channels = useSelector(selectChannels);
-  const activeChannelId = useSelector(selectActiveChannelId);
-  const messages = useSelector((state) => selectMessagesByChannel(state, activeChannelId));
-
-  // Отправка сообщения
-  const sendMessage = (text) => {
-    if (!text?.trim()) return;
-
-    dispatch(
-      addMessage({
-        channelId: activeChannelId,
-        text: text.trim(),
-        username: user || 'Я',
-      })
-    );
-  };
+  const { channels, activeChannelId, loadChannels } = useChannels();
+  const { messages, loading, error, isSending, sendMessage, loadMessages } =
+    useMessages(activeChannelId);
 
   return {
     channels,
     activeChannelId,
     messages,
+    loading,
+    error,
+    isSending,
     sendMessage,
+    loadMessages,
+    loadChannels,
     user,
   };
 };

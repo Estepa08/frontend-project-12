@@ -2,20 +2,23 @@
 import api from './api';
 
 export const messageService = {
-  // Получить сообщения канала
-  getMessages: async (channelId) => {
-    const response = await api.get(`/channels/${channelId}/messages`);
+  getAll: async () => {
+    const response = await api.get('/messages');
     return response.data;
   },
 
-  // Отправить сообщение
-  sendMessage: async (channelId, text) => {
-    const response = await api.post(`/channels/${channelId}/messages`, { text });
+  create: async ({ body, channelId, username, tempId }) => {
+    const response = await api.post('/messages', { body, channelId, username, tempId });
     return response.data;
   },
 
-  // Удалить сообщение
-  deleteMessage: async (messageId) => {
-    await api.delete(`/messages/${messageId}`);
+  update: async (id, { body }) => {
+    const response = await api.patch(`/messages/${id}`, { body });
+    return response.data;
+  },
+
+  remove: async (id) => {
+    const response = await api.delete(`/messages/${id}`);
+    return response.data;
   },
 };

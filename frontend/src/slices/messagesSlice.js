@@ -1,41 +1,67 @@
 // frontend/src/slices/messagesSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
-  messages: {
-    1: [], // General
-  },
+  items: [],
 };
 
 const messagesSlice = createSlice({
   name: 'messages',
   initialState,
   reducers: {
-    addMessage: (state, action) => {
-      const { channelId, text, username } = action.payload;
-
-      if (!state.messages[channelId]) {
-        state.messages[channelId] = [];
-      }
-
-      state.messages[channelId].push({
-        id: Date.now(),
-        username: username || 'Пользователь',
-        text: text,
-        time: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        isSelf: true,
+    addOptimisticMessage: (state, action) => {
+      const { tempId, body, channelId, username } = action.payload;
+      state.items.push({
+        tempId,
+        body,
+        channelId,
+        username,
+        status: 'pending',
       });
+    },
+
+    confirmMessage: (state, action) => {
+      const { tempId, realMessage } = action.payload;
+      const index = state.items.findIndex((msg) => msg.tempId === tempId);
+      if (index !== -1) {
+        state.items[index] = { ...realMessage, status: 'sent' };
+      }
+    },
+
+    failMessage: (state, action) => {
+      const { tempId } = action.payload;
+      const index = state.items.findIndex((msg) => msg.tempId === tempId);
+      if (index !== -1) {
+        state.items[index].status = 'failed';
+      }
+    },
+
+    addMessage: (state, action) => {
+      const incoming = action.payload;
+      const index = state.items.findIndex(
+        (msg) =>
+          (incoming.id && msg.id === incoming.id) ||
+          (incoming.tempId && msg.tempId === incoming.tempId)
+      );
+
+      if (index !== -1) {
+        state.items[index] = { ...incoming, status: 'sent' };
+      } else {
+        state.items.push({ ...incoming, status: 'sent' });
+      }
     },
   },
 });
 
-export const { addMessage } = messagesSlice.actions;
+export const { addOptimisticMessage, confirmMessage, failMessage, addMessage } =
+  messagesSlice.actions;
 export default messagesSlice.reducer;
 
 // Селекторы
-export const selectMessagesByChannel = (state, channelId) => {
-  return state.messages.messages[channelId] || [];
-};
+const selectAllMessages = (state) => state.messages.items;
+const selectChannelIdParam = (state, channelId) => channelId;
+
+export const selectMessagesByChannel = createSelector(
+  [selectAllMessages, selectChannelIdParam],
+  (items, channelId) => items.filter((msg) => msg.channelId === channelId)
+);

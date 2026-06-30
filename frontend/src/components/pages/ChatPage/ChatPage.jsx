@@ -1,5 +1,5 @@
 // frontend/src/components/pages/ChatPage/ChatPage.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MenuFoldOutlined,
@@ -25,8 +25,18 @@ const ChatPage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ Вся логика чата в одном хуке
-  const { channels, activeChannelId, messages, sendMessage, user } = useChat();
+  const { channels, activeChannelId, messages, sendMessage, loadMessages, loadChannels, user } =
+    useChat();
+
+  useEffect(() => {
+    loadChannels();
+  }, []);
+
+  useEffect(() => {
+    if (activeChannelId) {
+      loadMessages();
+    }
+  }, [activeChannelId]);
 
   const handleLogout = () => {
     logout();
@@ -48,7 +58,6 @@ const ChatPage = () => {
 
   return (
     <Layout className={styles.layout}>
-      {/* Сайдбар */}
       <Sider trigger={null} collapsible collapsed={collapsed} className={styles.sider} width={200}>
         <div className={styles.logo}>
           <MessageOutlined className={styles.logoIcon} />
@@ -70,7 +79,6 @@ const ChatPage = () => {
         </div>
       </Sider>
 
-      {/* Основная часть */}
       <Layout>
         <Header className={styles.header}>
           <div className={styles.headerLeft}>
@@ -100,30 +108,40 @@ const ChatPage = () => {
           <div className={styles.messageContainer}>
             <div className={styles.messageList}>
               {messages.length > 0 ? (
-                messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`${styles.messageItem} ${msg.isSelf ? styles.messageItemSelf : ''}`}
-                  >
-                    <Avatar
-                      className={styles.messageAvatar}
-                      style={{
-                        backgroundColor: msg.isSelf ? '#1677ff' : '#52c41a',
-                      }}
+                messages.map((msg) => {
+                  const isSelf = msg.username === user;
+                  return (
+                    <div
+                      key={msg.id || msg.tempId}
+                      className={`${styles.messageItem} ${isSelf ? styles.messageItemSelf : ''}`}
                     >
-                      {msg.username?.[0]?.toUpperCase() || 'U'}
-                    </Avatar>
-                    <div className={styles.messageContent}>
-                      <div className={styles.messageHeader}>
-                        <span className={styles.messageUsername}>
-                          {msg.username || 'Пользователь'}
-                        </span>
-                        <span className={styles.messageTime}>{msg.time || ''}</span>
+                      <Avatar
+                        className={styles.messageAvatar}
+                        style={{
+                          backgroundColor: isSelf ? '#1677ff' : '#52c41a',
+                        }}
+                      >
+                        {msg.username?.[0]?.toUpperCase() || 'U'}
+                      </Avatar>
+                      <div className={styles.messageContent}>
+                        <div className={styles.messageHeader}>
+                          <span className={styles.messageUsername}>
+                            {msg.username || 'Пользователь'}
+                          </span>
+                          {msg.status === 'pending' && (
+                            <span className={styles.messageTime}>отправляется…</span>
+                          )}
+                          {msg.status === 'failed' && (
+                            <span className={styles.messageTime} style={{ color: 'red' }}>
+                              не отправлено
+                            </span>
+                          )}
+                        </div>
+                        <div className={styles.messageText}>{msg.body}</div>
                       </div>
-                      <div className={styles.messageText}>{msg.text}</div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className={styles.emptyState}>
                   <MessageOutlined className={styles.emptyStateIcon} />
