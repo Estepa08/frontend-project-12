@@ -12,7 +12,6 @@ export const useAuth = () => {
   const dispatch = useDispatch();
   const { isAuthenticated, user, loading, error } = useSelector((state) => state.auth);
 
-  // Восстановление сессии при загрузке страницы
   useEffect(() => {
     const token = authService.getToken();
     const savedUser = authService.getUser();
@@ -29,9 +28,30 @@ export const useAuth = () => {
       dispatch(login({ user: data.username, token: data.token }));
       connectSocket(data.token);
       return data;
-    } catch (error) {
-      dispatch(setError(error.response?.data?.message || 'Ошибка входа'));
-      throw error;
+    } catch (err) {
+      dispatch(setError(err.response?.data?.message || 'Ошибка входа'));
+      throw err;
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleSignup = async (userData) => {
+    try {
+      dispatch(setLoading(true));
+      const data = await authService.signup(userData);
+      dispatch(login({ user: data.username, token: data.token }));
+      connectSocket(data.token);
+      return data;
+    } catch (err) {
+      // 409 — пользователь уже существует
+      const status = err.response?.status;
+      const message =
+        status === 409
+          ? 'Пользователь с таким именем уже существует'
+          : err.response?.data?.message || 'Ошибка регистрации';
+      dispatch(setError(message));
+      throw err;
     } finally {
       dispatch(setLoading(false));
     }
@@ -49,6 +69,7 @@ export const useAuth = () => {
     loading,
     error,
     login: handleLogin,
+    signup: handleSignup,
     logout: handleLogout,
   };
 };

@@ -19,16 +19,31 @@ export const disconnect = () => {
 
 export const subscribeToMessages = (callback) => {
   if (!socket) {
-    console.warn('subscribeToMessages вызван до connect() — подписка не выполнена');
+    console.warn('subscribeToMessages вызван до connect()');
     return;
   }
   socket.on('newMessage', callback);
 };
 
 export const unsubscribeFromMessages = (callback) => {
-  if(!socket) {
-    console.warn('unsubscribeFromMessages вызван до connect() — отписка не выполнена');
+  if (!socket) return;
+  socket.off('newMessage', callback);
+};
+
+// Новые подписки для каналов:
+export const subscribeToChannels = (callbacks) => {
+  if (!socket) {
+    console.warn('subscribeToChannels вызван до connect()');
     return;
   }
-  socket.off('newMessage', callback);
+  socket.on('newChannel', callbacks.onAdd);
+  socket.on('removeChannel', callbacks.onRemove);
+  socket.on('renameChannel', callbacks.onRename);
+};
+
+export const unsubscribeFromChannels = (callbacks) => {
+  if (!socket) return;
+  socket.off('newChannel', callbacks.onAdd);
+  socket.off('removeChannel', callbacks.onRemove);
+  socket.off('renameChannel', callbacks.onRename);
 };

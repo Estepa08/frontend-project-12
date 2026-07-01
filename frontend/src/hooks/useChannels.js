@@ -34,6 +34,49 @@ export const useChannels = () => {
     dispatch(setActiveChannel(channelId));
   };
 
+  const createChannel = async (name) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await chatService.addChannel(name);
+      // Переключаемся в новый канал — требование задания
+      dispatch(setActiveChannel(data.id));
+      return data;
+    } catch (err) {
+      setError(err.message || 'Ошибка создания канала');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteChannel = async (channelId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await chatService.removeChannel(channelId);
+      // Socket сам обработает removeChannel и переключит канал
+    } catch (err) {
+      setError(err.message || 'Ошибка удаления канала');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateChannel = async (channelId, name) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await chatService.editChannel(channelId, name);
+    } catch (err) {
+      setError(err.message || 'Ошибка переименования канала');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     channels,
     activeChannelId,
@@ -41,5 +84,8 @@ export const useChannels = () => {
     error,
     loadChannels,
     switchChannel,
+    createChannel,
+    deleteChannel,
+    updateChannel,
   };
 };

@@ -50,11 +50,19 @@ const messagesSlice = createSlice({
         state.items.push({ ...incoming, status: 'sent' });
       }
     },
+    removeMessagesByChannel: (state, action) => {
+      state.items = state.items.filter((msg) => msg.channelId !== action.payload);
+    },
   },
 });
 
-export const { addOptimisticMessage, confirmMessage, failMessage, addMessage } =
-  messagesSlice.actions;
+export const {
+  addOptimisticMessage,
+  confirmMessage,
+  failMessage,
+  addMessage,
+  removeMessagesByChannel,
+} = messagesSlice.actions;
 export default messagesSlice.reducer;
 
 // Селекторы
