@@ -28,7 +28,7 @@ const SignupPage = () => {
   });
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/chat');
+    if (isAuthenticated) navigate('/');
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (values, { setSubmitting }) => {

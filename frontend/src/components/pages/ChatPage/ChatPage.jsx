@@ -8,7 +8,6 @@ import {
   MessageOutlined,
   LogoutOutlined,
   SendOutlined,
-  PlusOutlined,
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
@@ -141,7 +140,7 @@ const ChatPage = () => {
                 onClick={() => switchChannel(channel.id)}
               >
                 <MessageOutlined className={styles.channelItemIcon} />
-                {!collapsed && <span className={styles.channelItemName}># {channel.name}</span>}
+                {!collapsed && <span className={styles.channelItemName}>{channel.name}</span>}
               </button>
 
               {channel.removable && !collapsed && (
@@ -163,13 +162,8 @@ const ChatPage = () => {
 
         {!collapsed && (
           <div className={styles.addChannelWrapper}>
-            <Button
-              type="dashed"
-              icon={<PlusOutlined />}
-              onClick={() => setAddModalOpen(true)}
-              block
-            >
-              +{t('channels.add')}
+            <Button type="dashed" onClick={() => setAddModalOpen(true)} block>
+              {t('channels.add')}
             </Button>
           </div>
         )}
@@ -185,7 +179,7 @@ const ChatPage = () => {
               className={styles.toggleButton}
             />
             <Title level={4} style={{ margin: 0 }}>
-              # {activeChannel?.name || 'General'}
+              {activeChannel?.name || 'General'}
             </Title>
           </div>
 
@@ -254,6 +248,7 @@ const ChatPage = () => {
                 })}
                 autoSize={{ minRows: 1, maxRows: 4 }}
                 className={styles.messageInput}
+                aria-label="Новое сообщение"
               />
               <button
                 type="button"
