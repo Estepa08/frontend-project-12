@@ -2,17 +2,20 @@
   "appName": "Hexlet Chat",
   "logout": "Выйти",
   "login": {
-    "title": "Вход в чат",
-    "username": "Имя пользователя",
+    "title": "Войти",
+    "username": "Ваш ник",
     "password": "Пароль",
     "submit": "Войти",
-    "noAccount": "Нет аккаунта? Зарегистрируйтесь"
+    "noAccount": "Нет аккаунта? Зарегистрируйтесь",
+    "errors": {
+      "invalidCredentials": "Неверные имя пользователя или пароль"
+    }
   },
   "signup": {
     "title": "Регистрация",
     "username": "Имя пользователя",
     "password": "Пароль",
-    "confirmPassword": "Подтверждение пароля",
+    "confirmPassword": "Подтвердите пароль",
     "submit": "Зарегистрироваться",
     "alreadyHaveAccount": "Уже есть аккаунт? Войти",
     "errors": {
@@ -29,7 +32,7 @@
   },
   "chat": {
     "title": "Чат",
-    "addChannel": "Добавить канал",
+    "addChannel": "+",
     "inputPlaceholder": "Написать в # {{channelName}}...",
     "send": "Отправить",
     "noMessages": "Сообщений пока нет",
@@ -38,7 +41,7 @@
     "messageFailed": "не отправлено"
   },
   "channels": {
-    "add": "Добавить канал",
+    "add": "+",
     "addTitle": "Добавить канал",
     "addSubmit": "Добавить",
     "rename": "Переименовать",
@@ -51,19 +54,19 @@
     "cancel": "Отмена",
     "channelName": "Имя канала",
     "newChannelName": "Новое имя канала",
-    "channelPlaceholder": "Введите имя канала"
+    "channelPlaceholder": "Введите имя канала",
+    "menu": "Управление каналом"
   },
   "errors": {
     "login": "Ошибка входа",
-    "network": "Ошибка сети",
+    "network": "Ошибка соединения",
     "unknown": "Неизвестная ошибка"
   },
-
   "toast": {
     "channelAdded": "Канал создан",
     "channelRenamed": "Канал переименован",
     "channelRemoved": "Канал удалён",
-    "networkError": "Ошибка сети",
+    "networkError": "Ошибка соединения",
     "loadError": "Ошибка загрузки данных"
   }
 }

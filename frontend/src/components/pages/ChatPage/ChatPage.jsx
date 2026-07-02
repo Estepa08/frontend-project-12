@@ -151,6 +151,7 @@ const ChatPage = () => {
                     size="small"
                     className={styles.channelMenuButton}
                     onClick={(e) => e.stopPropagation()}
+                    aria-label={t('channels.menu')}
                   >
                     ···
                   </Button>
@@ -168,7 +169,7 @@ const ChatPage = () => {
               onClick={() => setAddModalOpen(true)}
               block
             >
-              {t('channels.add')}
+              +{t('channels.add')}
             </Button>
           </div>
         )}

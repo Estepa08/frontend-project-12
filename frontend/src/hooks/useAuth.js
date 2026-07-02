@@ -29,7 +29,12 @@ export const useAuth = () => {
       connectSocket(data.token);
       return data;
     } catch (err) {
-      dispatch(setError(err.response?.data?.message || 'Ошибка входа'));
+      const status = err.response?.status;
+      const message =
+        status === 401
+          ? 'login.errors.invalidCredentials'
+          : 'errors.unknown';
+      dispatch(setError(message));
       throw err;
     } finally {
       dispatch(setLoading(false));

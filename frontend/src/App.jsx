@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { Provider as RollbarProvider, ErrorBoundary, useRollbar } from '@rollbar/react';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppHeader from './components/common/AppHeader';
 import HomePage from './components/pages/HomePage/HomePage';

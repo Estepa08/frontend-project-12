@@ -37,6 +37,8 @@ const LoginPage = () => {
     }
   };
 
+  
+
   return (
     <div className={styles.container}>
       <Card className={styles.card}>
@@ -47,7 +49,7 @@ const LoginPage = () => {
         {error && (
           <Alert
             message={t('errors.login')}
-            description={typeof error === 'string' ? error : error.message}
+            description={t(error)}
             type="error"
             showIcon
             style={{ marginBottom: 16 }}
