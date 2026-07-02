@@ -1,8 +1,8 @@
 // frontend/src/components/pages/HomePage.jsx
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { useEffect } from 'react';
+import { useAuth } from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Button, Layout, Typography, Card, Space } from 'antd';
 import { MessageOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
 import styles from './HomePage.module.css';
