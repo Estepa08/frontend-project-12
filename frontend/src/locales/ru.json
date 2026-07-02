@@ -39,7 +39,7 @@
     "noMessagesHint": "Напишите первое сообщение!",
     "messageSending": "отправляется…",
     "messageFailed": "не отправлено",
-    "newMessage": "Новое сообщение"
+    "messageInputLabel": "Новое сообщение"
   },
   "channels": {
     "add": "+",

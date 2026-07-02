@@ -248,7 +248,7 @@ const ChatPage = () => {
                 })}
                 autoSize={{ minRows: 1, maxRows: 4 }}
                 className={styles.messageInput}
-                aria-label="Новое сообщение"
+                aria-label={t('chat.messageInputLabel')}
               />
               <button
                 type="button"
