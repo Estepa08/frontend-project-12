@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppHeader from './components/common/AppHeader';
 import HomePage from './components/pages/HomePage/HomePage';
@@ -8,12 +8,15 @@ import ChatPage from './components/pages/ChatPage/ChatPage';
 import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
 import { useSocketSubscriptions } from './hooks/useSocketSubscriptions';
 
-function App() {
+// Отдельный компонент — чтобы useLocation работал внутри BrowserRouter
+const AppLayout = () => {
   useSocketSubscriptions();
+  const location = useLocation();
+  const isChatPage = location.pathname === '/chat';
 
   return (
-    <BrowserRouter>
-      <AppHeader />
+    <>
+      {!isChatPage && <AppHeader />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -28,6 +31,14 @@ function App() {
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
     </BrowserRouter>
   );
 }

@@ -5,21 +5,22 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, Card, Typography, Alert } from 'antd';
 import { useAuth } from '../../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 import styles from './LoginPage.module.css';
 
 const { Title } = Typography;
 
-// Схема валидации
-const validationSchema = Yup.object({
-  username: Yup.string().required('Обязательное поле'),
-  password: Yup.string().required('Обязательное поле'),
-});
-
 const LoginPage = () => {
+  const { t } = useTranslation();
   const { login, isAuthenticated, loading, error } = useAuth();
   const navigate = useNavigate();
 
-  // ✅ Перенаправление после логина
+  // Схема внутри компонента — чтобы t() был доступен
+  const validationSchema = Yup.object({
+    username: Yup.string().required(t('validation.required')),
+    password: Yup.string().required(t('validation.required')),
+  });
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/chat');
@@ -27,12 +28,10 @@ const LoginPage = () => {
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log('🔵 Отправка формы:', values);
     try {
       await login(values);
-      console.log('🟢 Логин успешен!');
     } catch (err) {
-      console.error('🔴 Ошибка логина:', err);
+      console.error(err);
     } finally {
       setSubmitting(false);
     }
@@ -42,12 +41,12 @@ const LoginPage = () => {
     <div className={styles.container}>
       <Card className={styles.card}>
         <Title level={2} className={styles.title}>
-          Вход в чат
+          {t('login.title')}
         </Title>
 
         {error && (
           <Alert
-            message="Ошибка"
+            message={t('errors.login')}
             description={typeof error === 'string' ? error : error.message}
             type="error"
             showIcon
@@ -63,11 +62,11 @@ const LoginPage = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <div className={styles.fieldGroup}>
-                <label>Имя пользователя</label>
+                <label>{t('login.username')}</label>
                 <Field
                   name="username"
                   type="text"
-                  placeholder="Введите имя"
+                  placeholder={t('login.username')}
                   className={`${styles.fieldInput} ${
                     errors.username && touched.username ? styles.error : ''
                   }`}
@@ -78,11 +77,11 @@ const LoginPage = () => {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label>Пароль</label>
+                <label>{t('login.password')}</label>
                 <Field
                   name="password"
                   type="password"
-                  placeholder="Введите пароль"
+                  placeholder={t('login.password')}
                   className={`${styles.fieldInput} ${
                     errors.password && touched.password ? styles.error : ''
                   }`}
@@ -93,11 +92,11 @@ const LoginPage = () => {
               </div>
 
               <Button type="primary" htmlType="submit" block loading={isSubmitting || loading}>
-                Войти
+                {t('login.submit')}
               </Button>
 
               <div className={styles.linkWrapper}>
-                <Link to="/signup">Нет аккаунта? Зарегистрируйтесь</Link>
+                <Link to="/signup">{t('login.noAccount')}</Link>
               </div>
             </Form>
           )}

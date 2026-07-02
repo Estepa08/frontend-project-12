@@ -6,6 +6,7 @@ import store from './slices/index.js';
 import App from './App.jsx';
 import 'antd/dist/reset.css'; // ← СТИЛИ ANT DESIGN!
 import './index.css'; // ← ВАШИ ГЛОБАЛЬНЫЕ СТИЛИ
+import './i18n.js'; // ← ИНИЦИАЛИЗАЦИЯ i18next
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -12,7 +12,8 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Typography, Avatar, Badge, Input, Dropdown } from 'antd';
+import { Button, Layout, Typography, Avatar, Input, Dropdown } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../hooks/useAuth';
 import { useChat } from '../../../hooks/useChat';
 import { AddChannelModal, RemoveChannelModal, RenameChannelModal } from '../../modals';
@@ -23,10 +24,9 @@ const { Title, Text } = Typography;
 const { TextArea } = Input;
 
 const ChatPage = () => {
+  const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [newMessage, setNewMessage] = useState('');
-
-  // Состояние модальных окон
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -51,19 +51,12 @@ const ChatPage = () => {
     user,
   } = useChat();
 
-  // Загружаем каналы при монтировании
   useEffect(() => {
     loadChannels();
   }, []);
-
-  // Загружаем сообщения при смене канала
   useEffect(() => {
-    if (activeChannelId) {
-      loadMessages();
-    }
+    if (activeChannelId) loadMessages();
   }, [activeChannelId]);
-
-  // Автоскролл вниз при новых сообщениях
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -86,7 +79,6 @@ const ChatPage = () => {
     }
   };
 
-  // Обработчики модалок
   const handleAddChannel = async (name) => {
     await createChannel(name);
     setAddModalOpen(false);
@@ -104,12 +96,11 @@ const ChatPage = () => {
     setSelectedChannel(null);
   };
 
-  // Выпадающее меню для канала
   const getChannelMenuItems = (channel) => [
     {
       key: 'rename',
       icon: <EditOutlined />,
-      label: 'Переименовать',
+      label: t('channels.rename'),
       onClick: () => {
         setSelectedChannel(channel);
         setRenameModalOpen(true);
@@ -118,7 +109,7 @@ const ChatPage = () => {
     {
       key: 'remove',
       icon: <DeleteOutlined />,
-      label: 'Удалить',
+      label: t('channels.remove'),
       danger: true,
       onClick: () => {
         setSelectedChannel(channel);
@@ -135,19 +126,15 @@ const ChatPage = () => {
       <Sider trigger={null} collapsible collapsed={collapsed} className={styles.sider} width={240}>
         <div className={styles.logo}>
           <MessageOutlined className={styles.logoIcon} />
-          {!collapsed && <span>Чат</span>}
+          {!collapsed && <span>{t('chat.title')}</span>}
         </div>
 
-        {/* Список каналов */}
         <div className={styles.channelList}>
           {channels.map((channel) => (
             <div
               key={channel.id}
-              className={`${styles.channelItem} ${
-                activeChannelId === channel.id ? styles.channelItemActive : ''
-              }`}
+              className={`${styles.channelItem} ${activeChannelId === channel.id ? styles.channelItemActive : ''}`}
             >
-              {/* Кнопка переключения канала */}
               <button
                 type="button"
                 className={styles.channelButton}
@@ -157,7 +144,6 @@ const ChatPage = () => {
                 {!collapsed && <span className={styles.channelItemName}># {channel.name}</span>}
               </button>
 
-              {/* Выпадающее меню — только для удаляемых каналов */}
               {channel.removable && !collapsed && (
                 <Dropdown menu={{ items: getChannelMenuItems(channel) }} trigger={['click']}>
                   <Button
@@ -174,7 +160,6 @@ const ChatPage = () => {
           ))}
         </div>
 
-        {/* Кнопка добавления канала */}
         {!collapsed && (
           <div className={styles.addChannelWrapper}>
             <Button
@@ -183,7 +168,7 @@ const ChatPage = () => {
               onClick={() => setAddModalOpen(true)}
               block
             >
-              Добавить канал
+              {t('channels.add')}
             </Button>
           </div>
         )}
@@ -204,12 +189,10 @@ const ChatPage = () => {
           </div>
 
           <div className={styles.headerRight}>
-            <Badge dot status="success">
-              <Avatar icon={<UserOutlined />} />
-            </Badge>
-            <Text className={styles.username}>{user || 'Пользователь'}</Text>
+            <Avatar icon={<UserOutlined />} />
+            <Text className={styles.username}>{user || t('chat.title')}</Text>
             <Button type="text" icon={<LogoutOutlined />} onClick={handleLogout} danger>
-              Выйти
+              {t('logout')}
             </Button>
           </div>
         </Header>
@@ -234,15 +217,13 @@ const ChatPage = () => {
                         </Avatar>
                         <div className={styles.messageContent}>
                           <div className={styles.messageHeader}>
-                            <span className={styles.messageUsername}>
-                              {msg.username || 'Пользователь'}
-                            </span>
+                            <span className={styles.messageUsername}>{msg.username}</span>
                             {msg.status === 'pending' && (
-                              <span className={styles.messageTime}>отправляется…</span>
+                              <span className={styles.messageTime}>{t('chat.messageSending')}</span>
                             )}
                             {msg.status === 'failed' && (
                               <span className={styles.messageTime} style={{ color: 'red' }}>
-                                не отправлено
+                                {t('chat.messageFailed')}
                               </span>
                             )}
                           </div>
@@ -251,14 +232,13 @@ const ChatPage = () => {
                       </div>
                     );
                   })}
-                  {/* Якорь для автоскролла */}
                   <div ref={messagesEndRef} />
                 </>
               ) : (
                 <div className={styles.emptyState}>
                   <MessageOutlined className={styles.emptyStateIcon} />
-                  <div className={styles.emptyStateTitle}>Сообщений пока нет</div>
-                  <div className={styles.emptyStateText}>Напишите первое сообщение!</div>
+                  <div className={styles.emptyStateTitle}>{t('chat.noMessages')}</div>
+                  <div className={styles.emptyStateText}>{t('chat.noMessagesHint')}</div>
                 </div>
               )}
             </div>
@@ -268,24 +248,26 @@ const ChatPage = () => {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder={`Написать в # ${activeChannel?.name || 'general'}...`}
+                placeholder={t('chat.inputPlaceholder', {
+                  channelName: activeChannel?.name || 'general',
+                })}
                 autoSize={{ minRows: 1, maxRows: 4 }}
                 className={styles.messageInput}
               />
               <button
+                type="button"
                 className={styles.sendButton}
                 onClick={handleSendMessage}
                 disabled={!newMessage.trim() || loading}
               >
                 <SendOutlined />
-                Отправить
+                {t('chat.send')}
               </button>
             </div>
           </div>
         </Content>
       </Layout>
 
-      {/* Модальные окна */}
       <AddChannelModal
         isOpen={addModalOpen}
         onClose={() => setAddModalOpen(false)}

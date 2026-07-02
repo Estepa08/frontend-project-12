@@ -2,18 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Modal, Button, Form, Input } from 'antd';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
-const validationSchema = (existingNames, currentName) =>
-  Yup.object({
-    name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(
-        existingNames.filter((n) => n !== currentName),
-        'Такой канал уже существует'
-      )
-      .required('Обязательное поле'),
-  });
+import { useTranslation } from 'react-i18next';
 
 const RenameChannelModal = ({
   isOpen,
@@ -23,17 +12,27 @@ const RenameChannelModal = ({
   currentName,
   isLoading,
 }) => {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
 
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .min(3, t('validation.channelNameLength'))
+      .max(20, t('validation.channelNameLength'))
+      .notOneOf(
+        existingNames.filter((n) => n !== currentName),
+        t('validation.channelNameUnique')
+      )
+      .required(t('validation.required')),
+  });
+
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
   }, [isOpen]);
 
   return (
     <Modal
-      title="Переименовать канал"
+      title={t('channels.renameTitle')}
       open={isOpen}
       onCancel={onClose}
       footer={null}
@@ -41,7 +40,7 @@ const RenameChannelModal = ({
     >
       <Formik
         initialValues={{ name: currentName || '' }}
-        validationSchema={validationSchema(existingNames, currentName)}
+        validationSchema={validationSchema}
         enableReinitialize
         onSubmit={async (values, { setSubmitting }) => {
           await onSubmit(values.name.trim());
@@ -53,7 +52,7 @@ const RenameChannelModal = ({
             <Form.Item
               validateStatus={errors.name && touched.name ? 'error' : ''}
               help={touched.name && errors.name}
-              label="Новое имя канала"
+              label={t('channels.newChannelName')}
             >
               <Field name="name">
                 {({ field }) => (
@@ -63,10 +62,10 @@ const RenameChannelModal = ({
             </Form.Item>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
               <Button onClick={onClose} disabled={isLoading || isSubmitting}>
-                Отмена
+                {t('channels.cancel')}
               </Button>
               <Button type="primary" htmlType="submit" loading={isLoading || isSubmitting}>
-                Переименовать
+                {t('channels.renameSubmit')}
               </Button>
             </div>
           </form>

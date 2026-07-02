@@ -1,43 +1,41 @@
-// frontend/src/components/pages/SignupPage/SignupPage.jsx
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Button, Card, Typography, Alert } from 'antd';
 import { useAuth } from '../../../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 import styles from './SignupPage.module.css';
 
 const { Title } = Typography;
 
-const validationSchema = Yup.object({
-  username: Yup.string()
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов')
-    .required('Обязательное поле'),
-  password: Yup.string().min(6, 'Не менее 6 символов').required('Обязательное поле'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
-    .required('Обязательное поле'),
-});
-
 const SignupPage = () => {
+  const { t } = useTranslation();
   const { signup, isAuthenticated, loading, error } = useAuth();
   const navigate = useNavigate();
 
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .min(3, t('validation.usernameLength'))
+      .max(20, t('validation.usernameLength'))
+      .required(t('validation.required')),
+    password: Yup.string()
+      .min(6, t('validation.passwordLength'))
+      .required(t('validation.required')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], t('validation.passwordsMatch'))
+      .required(t('validation.required')),
+  });
+
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/chat');
-    }
+    if (isAuthenticated) navigate('/chat');
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      await signup({
-        username: values.username,
-        password: values.password,
-      });
+      await signup({ username: values.username, password: values.password });
     } catch {
-      // ошибка уже в Redux через useAuth
+      // ошибка уже в Redux
     } finally {
       setSubmitting(false);
     }
@@ -47,12 +45,12 @@ const SignupPage = () => {
     <div className={styles.container}>
       <Card className={styles.card}>
         <Title level={2} className={styles.title}>
-          Регистрация
+          {t('signup.title')}
         </Title>
 
         {error && (
           <Alert
-            message="Ошибка"
+            message={t('errors.login')}
             description={typeof error === 'string' ? error : error.message}
             type="error"
             showIcon
@@ -68,14 +66,12 @@ const SignupPage = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <div className={styles.fieldGroup}>
-                <label>Имя пользователя</label>
+                <label>{t('signup.username')}</label>
                 <Field
                   name="username"
                   type="text"
-                  placeholder="От 3 до 20 символов"
-                  className={`${styles.fieldInput} ${
-                    errors.username && touched.username ? styles.error : ''
-                  }`}
+                  placeholder={t('validation.usernameLength')}
+                  className={`${styles.fieldInput} ${errors.username && touched.username ? styles.error : ''}`}
                 />
                 {errors.username && touched.username && (
                   <div className={styles.errorMessage}>{errors.username}</div>
@@ -83,14 +79,12 @@ const SignupPage = () => {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label>Пароль</label>
+                <label>{t('signup.password')}</label>
                 <Field
                   name="password"
                   type="password"
-                  placeholder="Не менее 6 символов"
-                  className={`${styles.fieldInput} ${
-                    errors.password && touched.password ? styles.error : ''
-                  }`}
+                  placeholder={t('validation.passwordLength')}
+                  className={`${styles.fieldInput} ${errors.password && touched.password ? styles.error : ''}`}
                 />
                 {errors.password && touched.password && (
                   <div className={styles.errorMessage}>{errors.password}</div>
@@ -98,14 +92,12 @@ const SignupPage = () => {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label>Подтверждение пароля</label>
+                <label>{t('signup.confirmPassword')}</label>
                 <Field
                   name="confirmPassword"
                   type="password"
-                  placeholder="Повторите пароль"
-                  className={`${styles.fieldInput} ${
-                    errors.confirmPassword && touched.confirmPassword ? styles.error : ''
-                  }`}
+                  placeholder={t('signup.confirmPassword')}
+                  className={`${styles.fieldInput} ${errors.confirmPassword && touched.confirmPassword ? styles.error : ''}`}
                 />
                 {errors.confirmPassword && touched.confirmPassword && (
                   <div className={styles.errorMessage}>{errors.confirmPassword}</div>
@@ -113,11 +105,11 @@ const SignupPage = () => {
               </div>
 
               <Button type="primary" htmlType="submit" block loading={isSubmitting || loading}>
-                Зарегистрироваться
+                {t('signup.submit')}
               </Button>
 
               <div className={styles.linkWrapper}>
-                <Link to="/login">Уже есть аккаунт? Войти</Link>
+                <Link to="/login">{t('signup.alreadyHaveAccount')}</Link>
               </div>
             </Form>
           )}

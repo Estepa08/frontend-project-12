@@ -2,31 +2,35 @@ import { useEffect, useRef } from 'react';
 import { Modal, Button, Form, Input } from 'antd';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-
-const validationSchema = (existingNames) =>
-  Yup.object({
-    name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(existingNames, 'Такой канал уже существует')
-      .required('Обязательное поле'),
-  });
+import { useTranslation } from 'react-i18next';
 
 const AddChannelModal = ({ isOpen, onClose, onSubmit, existingNames, isLoading }) => {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
 
-  // Автофокус при открытии модалки
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .min(3, t('validation.channelNameLength'))
+      .max(20, t('validation.channelNameLength'))
+      .notOneOf(existingNames, t('validation.channelNameUnique'))
+      .required(t('validation.required')),
+  });
+
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
   }, [isOpen]);
 
   return (
-    <Modal title="Добавить канал" open={isOpen} onCancel={onClose} footer={null} destroyOnHidden>
+    <Modal
+      title={t('channels.addTitle')}
+      open={isOpen}
+      onCancel={onClose}
+      footer={null}
+      destroyOnHidden
+    >
       <Formik
         initialValues={{ name: '' }}
-        validationSchema={validationSchema(existingNames)}
+        validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           await onSubmit(values.name.trim());
           setSubmitting(false);
@@ -37,14 +41,14 @@ const AddChannelModal = ({ isOpen, onClose, onSubmit, existingNames, isLoading }
             <Form.Item
               validateStatus={errors.name && touched.name ? 'error' : ''}
               help={touched.name && errors.name}
-              label="Имя канала"
+              label={t('channels.channelName')}
             >
               <Field name="name">
                 {({ field }) => (
                   <Input
                     {...field}
                     ref={inputRef}
-                    placeholder="Введите имя канала"
+                    placeholder={t('channels.channelPlaceholder')}
                     disabled={isLoading || isSubmitting}
                   />
                 )}
@@ -52,10 +56,10 @@ const AddChannelModal = ({ isOpen, onClose, onSubmit, existingNames, isLoading }
             </Form.Item>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
               <Button onClick={onClose} disabled={isLoading || isSubmitting}>
-                Отмена
+                {t('channels.cancel')}
               </Button>
               <Button type="primary" htmlType="submit" loading={isLoading || isSubmitting}>
-                Добавить
+                {t('channels.addSubmit')}
               </Button>
             </div>
           </form>
