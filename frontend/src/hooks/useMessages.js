@@ -5,6 +5,7 @@ import { messageService } from '../services/messageService';
 import { useAuth } from './useAuth';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { cleanMessage } from '../utils/profanityFilter';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -45,13 +46,14 @@ export const useMessages = (channelId) => {
     if (!text?.trim()) return;
 
     const tempId = crypto.randomUUID();
-    dispatch(addOptimisticMessage({ tempId, body: text, channelId, username: user }));
+    const cleanedText = cleanMessage(text);
+    dispatch(addOptimisticMessage({ tempId, body: cleanedText, channelId, username: user }));
 
     setIsSending(true);
     setError(null);
     try {
       const response = await messageService.create({
-        body: text,
+        body: cleanedText,
         channelId,
         username: user,
         tempId,

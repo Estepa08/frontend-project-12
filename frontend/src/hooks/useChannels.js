@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { chatService } from '../services/chatService';
+import { cleanMessage } from '../utils/profanityFilter';
 import {
   selectChannels,
   selectActiveChannelId,
@@ -42,7 +43,8 @@ export const useChannels = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await chatService.addChannel(name);
+      const cleanedName = cleanMessage(name);
+      const data = await chatService.addChannel(cleanedName);
       dispatch(setActiveChannel(data.id));
       toast.success(t('toast.channelAdded'));
       return data;
