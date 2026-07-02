@@ -37,7 +37,7 @@ const HomePage = () => {
 
             <Link to="/signup" className={styles.fullWidth}>
               <Button icon={<UserAddOutlined />} block size="large" className={styles.button}>
-                Создать аккаунт
+                Регистрация
               </Button>
             </Link>
 
