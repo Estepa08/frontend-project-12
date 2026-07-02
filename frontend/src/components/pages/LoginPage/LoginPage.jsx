@@ -37,8 +37,6 @@ const LoginPage = () => {
     }
   };
 
-  
-
   return (
     <div className={styles.container}>
       <Card className={styles.card}>
@@ -64,8 +62,9 @@ const LoginPage = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <div className={styles.fieldGroup}>
-                <label>{t('login.username')}</label>
+                <label htmlFor="username">{t('login.username')}</label>
                 <Field
+                  id="username"
                   name="username"
                   type="text"
                   placeholder={t('login.username')}
@@ -79,8 +78,9 @@ const LoginPage = () => {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label>{t('login.password')}</label>
+                <label htmlFor="password">{t('login.password')}</label>
                 <Field
+                  id="password"
                   name="password"
                   type="password"
                   placeholder={t('login.password')}

@@ -66,8 +66,9 @@ const SignupPage = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <div className={styles.fieldGroup}>
-                <label>{t('signup.username')}</label>
+                <label htmlFor="username">{t('signup.username')}</label>
                 <Field
+                  id="username"
                   name="username"
                   type="text"
                   placeholder={t('validation.usernameLength')}
@@ -79,8 +80,9 @@ const SignupPage = () => {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label>{t('signup.password')}</label>
+                <label htmlFor="password">{t('signup.password')}</label>
                 <Field
+                  id="password"
                   name="password"
                   type="password"
                   placeholder={t('validation.passwordLength')}
@@ -92,8 +94,9 @@ const SignupPage = () => {
               </div>
 
               <div className={styles.fieldGroup}>
-                <label>{t('signup.confirmPassword')}</label>
+                <label htmlFor="confirmPassword">{t('signup.confirmPassword')}</label>
                 <Field
+                  id="confirmPassword"
                   name="confirmPassword"
                   type="password"
                   placeholder={t('signup.confirmPassword')}
