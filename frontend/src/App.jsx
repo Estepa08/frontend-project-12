@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Provider as RollbarProvider, ErrorBoundary, useRollbar } from '@rollbar/react';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppHeader from './components/common/AppHeader';
 import HomePage from './components/pages/HomePage/HomePage';
@@ -10,7 +11,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSocketSubscriptions } from './hooks/useSocketSubscriptions';
 
-// Отдельный компонент — чтобы useLocation работал внутри BrowserRouter
+const rollbarConfig = {
+  accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
+  environment: import.meta.env.MODE,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+};
+
 const AppLayout = () => {
   useSocketSubscriptions();
   const location = useLocation();
@@ -40,9 +47,20 @@ const AppLayout = () => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
+    <RollbarProvider config={rollbarConfig}>
+      <ErrorBoundary
+        fallbackUI={() => (
+          <div style={{ padding: '20px', color: 'red' }}>
+            <h2>Что-то пошло не так.</h2>
+            <p>Мы уже разбираемся с проблемой.</p>
+          </div>
+        )}
+      >
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </RollbarProvider>
   );
 }
 
