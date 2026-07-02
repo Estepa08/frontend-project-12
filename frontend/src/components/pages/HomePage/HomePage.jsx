@@ -1,5 +1,8 @@
 // frontend/src/components/pages/HomePage.jsx
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Layout, Typography, Card, Space } from 'antd';
 import { MessageOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
 import styles from './HomePage.module.css';
@@ -8,6 +11,12 @@ const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
 const HomePage = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/chat');
+  }, [isAuthenticated, navigate]);
   return (
     <Layout className={styles.layout}>
       <Content className={styles.content}>
