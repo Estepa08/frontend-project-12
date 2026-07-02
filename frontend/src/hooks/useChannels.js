@@ -1,6 +1,8 @@
 // frontend/src/hooks/useChannels.js
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { chatService } from '../services/chatService';
 import {
   selectChannels,
@@ -11,6 +13,7 @@ import {
 
 export const useChannels = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const channels = useSelector(selectChannels);
   const activeChannelId = useSelector(selectActiveChannelId);
 
@@ -24,7 +27,8 @@ export const useChannels = () => {
       const data = await chatService.getChannels();
       dispatch(setChannels(data));
     } catch (err) {
-      setError(err.message || 'Ошибка загрузки каналов');
+      toast.error(t('toast.loadError'));
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -39,11 +43,12 @@ export const useChannels = () => {
     setError(null);
     try {
       const data = await chatService.addChannel(name);
-      // Переключаемся в новый канал — требование задания
       dispatch(setActiveChannel(data.id));
+      toast.success(t('toast.channelAdded'));
       return data;
     } catch (err) {
-      setError(err.message || 'Ошибка создания канала');
+      toast.error(t('toast.networkError'));
+      setError(err.message);
       throw err;
     } finally {
       setLoading(false);
@@ -55,9 +60,10 @@ export const useChannels = () => {
     setError(null);
     try {
       await chatService.removeChannel(channelId);
-      // Socket сам обработает removeChannel и переключит канал
+      toast.success(t('toast.channelRemoved'));
     } catch (err) {
-      setError(err.message || 'Ошибка удаления канала');
+      toast.error(t('toast.networkError'));
+      setError(err.message);
       throw err;
     } finally {
       setLoading(false);
@@ -69,8 +75,10 @@ export const useChannels = () => {
     setError(null);
     try {
       await chatService.editChannel(channelId, name);
+      toast.success(t('toast.channelRenamed'));
     } catch (err) {
-      setError(err.message || 'Ошибка переименования канала');
+      toast.error(t('toast.networkError'));
+      setError(err.message);
       throw err;
     } finally {
       setLoading(false);

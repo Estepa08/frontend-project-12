@@ -6,6 +6,8 @@ import LoginPage from './components/pages/LoginPage/LoginPage';
 import SignupPage from './components/pages/SignupPage/SignupPage';
 import ChatPage from './components/pages/ChatPage/ChatPage';
 import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useSocketSubscriptions } from './hooks/useSocketSubscriptions';
 
 // Отдельный компонент — чтобы useLocation работал внутри BrowserRouter
@@ -31,6 +33,7 @@ const AppLayout = () => {
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <ToastContainer />
     </>
   );
 };

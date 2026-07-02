@@ -57,5 +57,13 @@
     "login": "Ошибка входа",
     "network": "Ошибка сети",
     "unknown": "Неизвестная ошибка"
+  },
+
+  "toast": {
+    "channelAdded": "Канал создан",
+    "channelRenamed": "Канал переименован",
+    "channelRemoved": "Канал удалён",
+    "networkError": "Ошибка сети",
+    "loadError": "Ошибка загрузки данных"
   }
 }

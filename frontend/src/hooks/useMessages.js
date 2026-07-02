@@ -3,6 +3,11 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { messageService } from '../services/messageService';
 import { useAuth } from './useAuth';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 import {
   selectMessagesByChannel,
   addOptimisticMessage,
@@ -12,6 +17,7 @@ import {
 } from '../slices/messagesSlice';
 
 export const useMessages = (channelId) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { user } = useAuth();
 
@@ -28,7 +34,8 @@ export const useMessages = (channelId) => {
       const data = await messageService.getAll();
       data.forEach((msg) => dispatch(addMessage(msg)));
     } catch (err) {
-      setError(err.message || 'Ошибка загрузки сообщений');
+      toast.error(t('toast.networkError'));
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -52,7 +59,8 @@ export const useMessages = (channelId) => {
       dispatch(confirmMessage({ tempId, realMessage: response }));
     } catch (err) {
       dispatch(failMessage({ tempId }));
-      setError(err.message || 'Ошибка отправки сообщения');
+      toast.error(t('toast.networkError'));
+      setError(err.message);
     } finally {
       setIsSending(false);
     }
