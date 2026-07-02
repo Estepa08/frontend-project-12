@@ -49,12 +49,8 @@ export const useAuth = () => {
       connectSocket(data.token);
       return data;
     } catch (err) {
-      // 409 — пользователь уже существует
       const status = err.response?.status;
-      const message =
-        status === 409
-          ? 'Пользователь с таким именем уже существует'
-          : err.response?.data?.message || 'Ошибка регистрации';
+      const message = status === 409 ? 'signup.errors.userExists' : 'errors.unknown';
       dispatch(setError(message));
       throw err;
     } finally {

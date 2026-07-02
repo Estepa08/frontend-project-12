@@ -50,8 +50,8 @@ const SignupPage = () => {
 
         {error && (
           <Alert
-            message={t('errors.login')}
-            description={typeof error === 'string' ? error : error.message}
+            message={t('errors.unknown')}
+            description={t(error)}
             type="error"
             showIcon
             style={{ marginBottom: 16 }}
