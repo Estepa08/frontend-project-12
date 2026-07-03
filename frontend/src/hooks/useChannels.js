@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { chatService } from '../services/chatService';
 import { cleanMessage } from '../utils/profanityFilter';
+import { removeMessagesByChannel } from '../slices/messagesSlice';
 import {
   selectChannels,
   selectActiveChannelId,
@@ -56,18 +57,19 @@ export const useChannels = () => {
   };
 
   const deleteChannel = async (channelId) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await chatService.removeChannel(channelId);
-      toast.success(t('toast.channelRemoved'));
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  setError(null);
+  try {
+    await chatService.removeChannel(channelId);
+    dispatch(removeMessagesByChannel(channelId)); 
+    toast.success(t('toast.channelRemoved'));
+  } catch (err) {
+    setError(err.message);
+    throw err;
+  } finally {
+    setLoading(false);
+  }
+};
 
   const updateChannel = async (channelId, name) => {
     setLoading(true);
