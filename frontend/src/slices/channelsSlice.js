@@ -1,8 +1,6 @@
 // frontend/src/slices/channelsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-const DEFAULT_CHANNEL_ID = '1';
-
 const initialState = {
   channels: [],
   activeChannelId: null,
@@ -53,4 +51,3 @@ export const selectChannels = (state) => state.channels.channels;
 export const selectActiveChannelId = (state) => state.channels.activeChannelId;
 export const selectActiveChannel = (state) =>
   state.channels.channels.find((c) => c.id === state.channels.activeChannelId);
-export { DEFAULT_CHANNEL_ID };
