@@ -21,7 +21,7 @@ const rollbarConfig = {
 const AppLayout = () => {
   useSocketSubscriptions();
   const location = useLocation();
-  const isChatPage = location.pathname === '/chat';
+  const isChatPage = location.pathname === '/chat' || location.pathname === '/chat/';
 
   return (
     <>
@@ -30,14 +30,16 @@ const AppLayout = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/chat"
-          element={
-            <ProtectedRoute>
-              <ChatPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/chat" element={
+  <ProtectedRoute>
+    <ChatPage />
+  </ProtectedRoute>
+} />
+<Route path="/chat/" element={
+  <ProtectedRoute>
+    <ChatPage />
+  </ProtectedRoute>
+} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer />
