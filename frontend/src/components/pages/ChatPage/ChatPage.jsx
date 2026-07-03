@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useAuth } from '../../../hooks/useAuth';
 import { useChat } from '../../../hooks/useChat';
 import {
@@ -109,13 +110,14 @@ const ChatPage = () => {
                 {channel.removable ? (
                   <div className="d-flex dropdown btn-group">
                     <button
-                      type="button"
-                      className={`w-100 rounded-0 text-start btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
-                      onClick={() => switchChannel(channel.id)}
-                    >
-                      <span className="me-1">#</span>
-                      {channel.name}
-                    </button>
+  type="button"
+  aria-label={channel.name}
+  className={`w-100 rounded-0 text-start btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
+  onClick={() => switchChannel(channel.id)}
+>
+  <span className="me-1">#</span>
+  {channel.name}
+</button>
                     <button
                       type="button"
                       className={`flex-grow-0 dropdown-toggle dropdown-toggle-split btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
@@ -148,13 +150,14 @@ const ChatPage = () => {
                   </div>
                 ) : (
                   <button
-                    type="button"
-                    className={`w-100 rounded-0 text-start btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
-                    onClick={() => switchChannel(channel.id)}
-                  >
-                    <span className="me-1">#</span>
-                    {channel.name}
-                  </button>
+  type="button"
+  aria-label={channel.name}
+  className={`w-100 rounded-0 text-start btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
+  onClick={() => switchChannel(channel.id)}
+>
+  <span className="me-1">#</span>
+  {channel.name}
+</button>
                 )}
               </li>
             ))}
