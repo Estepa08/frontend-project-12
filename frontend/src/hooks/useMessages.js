@@ -1,32 +1,32 @@
-// frontend/src/hooks/useChannels.js
+// frontend/src/hooks/useMessages.js
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { chatService } from '../services/chatService';
+import { messageService } from '../services/messageService';
+import { useAuth } from './useAuth';
 import { cleanMessage } from '../utils/profanityFilter';
 import {
-  selectChannels,
-  selectActiveChannelId,
-  setChannels,
-  setActiveChannel,
-} from '../slices/channelsSlice';
+  selectMessagesByChannel,
+  addOptimisticMessage,
+  confirmMessage,
+  failMessage,
+  addMessage,
+} from '../slices/messagesSlice';
 
-export const useChannels = () => {
+export const useMessages = (channelId) => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
-  const channels = useSelector(selectChannels);
-  const activeChannelId = useSelector(selectActiveChannelId);
+  const { user } = useAuth();
+  const messages = useSelector((state) => selectMessagesByChannel(state, channelId));
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isSending, setIsSending] = useState(false);
 
-  const loadChannels = async () => {
+  const loadMessages = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await chatService.getChannels();
-      dispatch(setChannels(data));
+      const data = await messageService.getAll();
+      data.forEach((msg) => dispatch(addMessage(msg)));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -34,64 +34,35 @@ export const useChannels = () => {
     }
   };
 
-  const switchChannel = (channelId) => {
-    dispatch(setActiveChannel(channelId));
-  };
-
-  const createChannel = async (name) => {
-    setLoading(true);
+  const sendMessage = async (text) => {
+    if (!text?.trim()) return;
+    const tempId = crypto.randomUUID();
+    const cleanedText = cleanMessage(text);
+    dispatch(addOptimisticMessage({ tempId, body: cleanedText, channelId, username: user }));
+    setIsSending(true);
     setError(null);
     try {
-      const cleanedName = cleanMessage(name);
-      const data = await chatService.addChannel(cleanedName);
-      dispatch(setActiveChannel(data.id));
-      toast.success(t('toast.channelAdded'));
-      return data;
+      const response = await messageService.create({
+        body: cleanedText,
+        channelId,
+        username: user,
+        tempId,
+      });
+      dispatch(confirmMessage({ tempId, realMessage: response }));
     } catch (err) {
+      dispatch(failMessage({ tempId }));
       setError(err.message);
-      throw err;
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteChannel = async (channelId) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await chatService.removeChannel(channelId);
-      toast.success(t('toast.channelRemoved'));
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateChannel = async (channelId, name) => {
-    setLoading(true);
-    setError(null);
-    try {
-      await chatService.editChannel(channelId, name);
-      toast.success(t('toast.channelRenamed'));
-    } catch (err) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
+      setIsSending(false);
     }
   };
 
   return {
-    channels,
-    activeChannelId,
+    messages,
     loading,
     error,
-    loadChannels,
-    switchChannel,
-    createChannel,
-    deleteChannel,
-    updateChannel,
+    isSending,
+    loadMessages,
+    sendMessage,
   };
 };

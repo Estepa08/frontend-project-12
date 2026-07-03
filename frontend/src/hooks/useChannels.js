@@ -28,7 +28,7 @@ export const useChannels = () => {
       const data = await chatService.getChannels();
       dispatch(setChannels(data));
     } catch (err) {
-  setError(err.message);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ export const useChannels = () => {
       toast.success(t('toast.channelAdded'));
       return data;
     } catch (err) {
-  setError(err.message);
+      setError(err.message);
       throw err;
     } finally {
       setLoading(false);
@@ -62,7 +62,7 @@ export const useChannels = () => {
       await chatService.removeChannel(channelId);
       toast.success(t('toast.channelRemoved'));
     } catch (err) {
-  setError(err.message);
+      setError(err.message);
       throw err;
     } finally {
       setLoading(false);
@@ -76,7 +76,7 @@ export const useChannels = () => {
       await chatService.editChannel(channelId, name);
       toast.success(t('toast.channelRenamed'));
     } catch (err) {
-  setError(err.message);
+      setError(err.message);
       throw err;
     } finally {
       setLoading(false);
