@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+// frontend/src/App.jsx
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AppHeader from './components/common/AppHeader';
@@ -21,7 +22,7 @@ const rollbarConfig = {
 const AppLayout = () => {
   useSocketSubscriptions();
   const location = useLocation();
-  const isChatPage = location.pathname === '/chat' || location.pathname === '/chat/';
+  const isChatPage = location.pathname.startsWith('/chat');
 
   return (
     <>
@@ -30,16 +31,16 @@ const AppLayout = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/chat" element={
-  <ProtectedRoute>
-    <ChatPage />
-  </ProtectedRoute>
-} />
-<Route path="/chat/" element={
-  <ProtectedRoute>
-    <ChatPage />
-  </ProtectedRoute>
-} />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Редирект со слешем на без слеша */}
+        <Route path="/chat/" element={<Navigate to="/chat" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer />

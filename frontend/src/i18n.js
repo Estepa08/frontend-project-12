@@ -11,7 +11,7 @@ const resources = {
 i18n.use(initReactI18next).init({
   lng: 'ru',
   fallbackLng: 'ru',
-  debug: true,
+  debug: import.meta.env.DEV,
   resources,
   interpolation: {
     escapeValue: false,
