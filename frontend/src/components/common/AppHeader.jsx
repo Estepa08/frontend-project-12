@@ -20,11 +20,7 @@ const AppHeader = () => {
           {t('appName')}
         </Link>
         {isAuthenticated && (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleLogout}
-          >
+          <button type="button" className="btn btn-primary" onClick={handleLogout}>
             {t('logout')}
           </button>
         )}
