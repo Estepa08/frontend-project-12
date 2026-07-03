@@ -1,19 +1,15 @@
-// frontend/src/components/pages/NotFoundPage.jsx
+// frontend/src/components/pages/NotFoundPage/NotFoundPage.jsx
 import { Link } from 'react-router-dom';
-import { Button, Result } from 'antd';
 
 const NotFoundPage = () => {
   return (
-    <Result
-      status="404"
-      title="404"
-      subTitle="Извините, страница не найдена."
-      extra={
-        <Link to="/">
-          <Button type="primary">Вернуться на главную</Button>
-        </Link>
-      }
-    />
+    <div className="container text-center mt-5">
+      <h1 className="display-1">404</h1>
+      <p className="lead">Извините, страница не найдена.</p>
+      <Link to="/" className="btn btn-primary">
+        Вернуться на главную
+      </Link>
+    </div>
   );
 };
 

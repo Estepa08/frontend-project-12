@@ -1,23 +1,43 @@
-import { Modal, Button, Typography } from 'antd';
+// frontend/src/components/modals/RemoveChannelModal.jsx
 import { useTranslation } from 'react-i18next';
-
-const { Text } = Typography;
 
 const RemoveChannelModal = ({ isOpen, onClose, onConfirm, isLoading }) => {
   const { t } = useTranslation();
 
+  if (!isOpen) return null;
+
   return (
-    <Modal title={t('channels.removeTitle')} open={isOpen} onCancel={onClose} footer={null}>
-      <Text>{t('channels.removeConfirm')}</Text>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
-        <Button onClick={onClose} disabled={isLoading}>
-          {t('channels.cancel')}
-        </Button>
-        <Button danger type="primary" onClick={onConfirm} loading={isLoading}>
-          {t('channels.removeSubmit')}
-        </Button>
+    <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">{t('channels.removeTitle')}</h5>
+            <button type="button" className="btn-close" onClick={onClose} />
+          </div>
+          <div className="modal-body">
+            <p>{t('channels.removeConfirm')}</p>
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+              disabled={isLoading}
+            >
+              {t('channels.cancel')}
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={onConfirm}
+              disabled={isLoading}
+            >
+              {t('channels.removeSubmit')}
+            </button>
+          </div>
+        </div>
       </div>
-    </Modal>
+    </div>
   );
 };
 

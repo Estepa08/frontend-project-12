@@ -1,30 +1,17 @@
 // frontend/src/components/pages/ChatPage/ChatPage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UserOutlined,
-  MessageOutlined,
-  LogoutOutlined,
-  SendOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
-import { Button, Layout, Typography, Avatar, Input, Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../hooks/useAuth';
 import { useChat } from '../../../hooks/useChat';
-import { AddChannelModal, RemoveChannelModal, RenameChannelModal } from '../../modals';
-import styles from './ChatPage.module.css';
-
-const { Header, Sider, Content } = Layout;
-const { Title, Text } = Typography;
-const { TextArea } = Input;
+import {
+  AddChannelModal,
+  RemoveChannelModal,
+  RenameChannelModal,
+} from '../../modals';
 
 const ChatPage = () => {
   const { t } = useTranslation();
-  const [collapsed, setCollapsed] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
@@ -50,20 +37,11 @@ const ChatPage = () => {
     user,
   } = useChat();
 
-  useEffect(() => {
-    loadChannels();
-  }, []);
-  useEffect(() => {
-    if (activeChannelId) loadMessages();
-  }, [activeChannelId]);
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  useEffect(() => { loadChannels(); }, []);
+  useEffect(() => { if (activeChannelId) loadMessages(); }, [activeChannelId]);
+  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
@@ -95,175 +73,163 @@ const ChatPage = () => {
     setSelectedChannel(null);
   };
 
-  const getChannelMenuItems = (channel) => [
-    {
-      key: 'rename',
-      icon: <EditOutlined />,
-      label: t('channels.rename'),
-      onClick: () => {
-        setSelectedChannel(channel);
-        setRenameModalOpen(true);
-      },
-    },
-    {
-      key: 'remove',
-      icon: <DeleteOutlined />,
-      label: t('channels.remove'),
-      danger: true,
-      onClick: () => {
-        setSelectedChannel(channel);
-        setRemoveModalOpen(true);
-      },
-    },
-  ];
-
   const activeChannel = channels.find((c) => c.id === activeChannelId);
   const channelNames = channels.map((c) => c.name);
 
   return (
-    <Layout className={styles.layout}>
-      <Sider trigger={null} collapsible collapsed={collapsed} className={styles.sider} width={240}>
-        <div className={styles.logo}>
-          <MessageOutlined className={styles.logoIcon} />
-          {!collapsed && <span>{t('chat.title')}</span>}
-        </div>
+    <div className="container h-100 my-4 overflow-hidden rounded shadow">
+      <div className="row h-100 bg-white flex-md-row">
 
-        <div className={styles.channelList}>
-          {channels.map((channel) => (
-            <div
-              key={channel.id}
-              className={`${styles.channelItem} ${activeChannelId === channel.id ? styles.channelItemActive : ''}`}
+        {/* Сайдбар с каналами */}
+        <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
+          <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
+            <b>Каналы</b>
+            <button
+              type="button"
+              className="p-0 text-primary btn btn-group-vertical"
+              onClick={() => setAddModalOpen(true)}
             >
-              <button
-                type="button"
-                className={styles.channelButton}
-                onClick={() => switchChannel(channel.id)}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                width="20"
+                height="20"
+                fill="currentColor"
               >
-                <MessageOutlined className={styles.channelItemIcon} />
-                {!collapsed && <span className={styles.channelItemName}>{channel.name}</span>}
-              </button>
+                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+              <span className="visually-hidden">{t('channels.add')}</span>
+            </button>
+          </div>
 
-              {channel.removable && !collapsed && (
-                <Dropdown menu={{ items: getChannelMenuItems(channel) }} trigger={['click']}>
-                  <Button
-                    type="text"
-                    size="small"
-                    className={styles.channelMenuButton}
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={t('channels.menu')}
+          <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
+            {channels.map((channel) => (
+              <li key={channel.id} className="nav-item w-100">
+                {channel.removable ? (
+                  <div className="d-flex dropdown btn-group">
+                    <button
+                      type="button"
+                      className={`w-100 rounded-0 text-start btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
+                      onClick={() => switchChannel(channel.id)}
+                    >
+                      <span className="me-1">#</span>
+                      {channel.name}
+                    </button>
+                    <button
+                      type="button"
+                      className={`flex-grow-0 dropdown-toggle dropdown-toggle-split btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      aria-label={t('channels.menu')}
+                    >
+                      <span className="visually-hidden">{t('channels.menu')}</span>
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li>
+                        <button
+                          type="button"
+                          className="dropdown-item"
+                          onClick={() => { setSelectedChannel(channel); setRenameModalOpen(true); }}
+                        >
+                          {t('channels.rename')}
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          className="dropdown-item"
+                          onClick={() => { setSelectedChannel(channel); setRemoveModalOpen(true); }}
+                        >
+                          {t('channels.remove')}
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    className={`w-100 rounded-0 text-start btn ${activeChannelId === channel.id ? 'btn-secondary' : ''}`}
+                    onClick={() => switchChannel(channel.id)}
                   >
-                    ···
-                  </Button>
-                </Dropdown>
-              )}
-            </div>
-          ))}
+                    <span className="me-1">#</span>
+                    {channel.name}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {!collapsed && (
-          <div className={styles.addChannelWrapper}>
-            <Button type="dashed" onClick={() => setAddModalOpen(true)} block>
-              {t('channels.add')}
-            </Button>
-          </div>
-        )}
-      </Sider>
-
-      <Layout>
-        <Header className={styles.header}>
-          <div className={styles.headerLeft}>
-            <Button
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-              className={styles.toggleButton}
-            />
-            <Title level={4} style={{ margin: 0 }}>
-              {activeChannel?.name || 'General'}
-            </Title>
+        {/* Основная область чата */}
+        <div className="col p-0 h-100">
+          {/* Хедер чата */}
+          <div className="bg-light mb-4 p-3 shadow-sm small">
+            <p className="m-0">
+              <b># {activeChannel?.name}</b>
+            </p>
           </div>
 
-          <div className={styles.headerRight}>
-            <Avatar icon={<UserOutlined />} />
-            <Text className={styles.username}>{user || t('chat.title')}</Text>
-            <Button type="text" icon={<LogoutOutlined />} onClick={handleLogout} danger>
-              {t('logout')}
-            </Button>
+          {/* Список сообщений */}
+          <div id="messages-box" className="chat-messages overflow-auto px-5">
+            {messages.map((msg) => (
+              <div key={msg.id || msg.tempId} className="text-break mb-2">
+                <b>{msg.username}</b>
+                {msg.status === 'pending' && (
+                  <span className="text-muted ms-1">{t('chat.messageSending')}</span>
+                )}
+                {msg.status === 'failed' && (
+                  <span className="text-danger ms-1">{t('chat.messageFailed')}</span>
+                )}
+                {': '}
+                {msg.body}
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
           </div>
-        </Header>
 
-        <Content className={styles.content}>
-          <div className={styles.messageContainer}>
-            <div className={styles.messageList}>
-              {messages.length > 0 ? (
-                <>
-                  {messages.map((msg) => {
-                    const isSelf = msg.username === user;
-                    return (
-                      <div
-                        key={msg.id || msg.tempId}
-                        className={`${styles.messageItem} ${isSelf ? styles.messageItemSelf : ''}`}
-                      >
-                        <Avatar
-                          className={styles.messageAvatar}
-                          style={{ backgroundColor: isSelf ? '#1677ff' : '#52c41a' }}
-                        >
-                          {msg.username?.[0]?.toUpperCase() || 'U'}
-                        </Avatar>
-                        <div className={styles.messageContent}>
-                          <div className={styles.messageHeader}>
-                            <span className={styles.messageUsername}>{msg.username}</span>
-                            {msg.status === 'pending' && (
-                              <span className={styles.messageTime}>{t('chat.messageSending')}</span>
-                            )}
-                            {msg.status === 'failed' && (
-                              <span className={styles.messageTime} style={{ color: 'red' }}>
-                                {t('chat.messageFailed')}
-                              </span>
-                            )}
-                          </div>
-                          <div className={styles.messageText}>{msg.body}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  <div ref={messagesEndRef} />
-                </>
-              ) : (
-                <div className={styles.emptyState}>
-                  <MessageOutlined className={styles.emptyStateIcon} />
-                  <div className={styles.emptyStateTitle}>{t('chat.noMessages')}</div>
-                  <div className={styles.emptyStateText}>{t('chat.noMessagesHint')}</div>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.messageInputWrapper}>
-              <TextArea
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder={t('chat.inputPlaceholder', {
-                  channelName: activeChannel?.name || 'general',
-                })}
-                autoSize={{ minRows: 1, maxRows: 4 }}
-                className={styles.messageInput}
-                aria-label={t('chat.messageInputLabel')}
-              />
-              <button
-                type="button"
-                className={styles.sendButton}
-                onClick={handleSendMessage}
-                disabled={!newMessage.trim() || loading}
-              >
-                <SendOutlined />
-                {t('chat.send')}
-              </button>
-            </div>
+          {/* Поле ввода */}
+          <div className="mt-auto px-5 py-3">
+            <form
+              className="py-1 border rounded-2"
+              onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
+            >
+              <div className="input-group has-validation">
+                <input
+                  name="body"
+                  aria-label={t('chat.messageInputLabel')}
+                  placeholder={t('chat.inputPlaceholder', { channelName: activeChannel?.name || 'general' })}
+                  className="border-0 p-0 ps-2 form-control"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                />
+                <button
+                  type="submit"
+                  disabled={!newMessage.trim() || loading}
+                  className="btn btn-group-vertical"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4.5 6.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 8.5z"
+                    />
+                  </svg>
+                  <span className="visually-hidden">{t('chat.send')}</span>
+                </button>
+              </div>
+            </form>
           </div>
-        </Content>
-      </Layout>
+        </div>
+      </div>
 
+      {/* Модальные окна */}
       <AddChannelModal
         isOpen={addModalOpen}
         onClose={() => setAddModalOpen(false)}
@@ -273,25 +239,19 @@ const ChatPage = () => {
       />
       <RemoveChannelModal
         isOpen={removeModalOpen}
-        onClose={() => {
-          setRemoveModalOpen(false);
-          setSelectedChannel(null);
-        }}
+        onClose={() => { setRemoveModalOpen(false); setSelectedChannel(null); }}
         onConfirm={handleRemoveChannel}
         isLoading={loading}
       />
       <RenameChannelModal
         isOpen={renameModalOpen}
-        onClose={() => {
-          setRenameModalOpen(false);
-          setSelectedChannel(null);
-        }}
+        onClose={() => { setRenameModalOpen(false); setSelectedChannel(null); }}
         onSubmit={handleRenameChannel}
         existingNames={channelNames}
         currentName={selectedChannel?.name}
         isLoading={loading}
       />
-    </Layout>
+    </div>
   );
 };
 
