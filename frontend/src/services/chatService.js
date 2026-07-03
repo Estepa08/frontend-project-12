@@ -24,9 +24,4 @@ export const chatService = {
     return response.data;
   },
 
-  getChannelMessages: messageService.getAll,
-  sendMessage: messageService.create,
-  deleteMessage: messageService.remove,
-};
-
 export default chatService;
