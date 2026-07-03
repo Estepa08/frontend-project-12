@@ -10,8 +10,12 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/chat');
-  }, [isAuthenticated, navigate]);
+  if (isAuthenticated) {
+    navigate('/chat');
+  } else {
+    navigate('/login');
+  }
+}, [isAuthenticated, navigate]);
 
   return (
     <div className="container-fluid h-100">
