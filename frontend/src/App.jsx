@@ -10,6 +10,7 @@ import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSocketSubscriptions } from './hooks/useSocketSubscriptions';
+import PublicOnlyRoute from './components/common/PublicOnlyRoute';
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_ACCESS_TOKEN,
@@ -29,17 +30,30 @@ const AppLayout = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/chat" element={
-  <ProtectedRoute>
-    <ChatPage />
-  </ProtectedRoute>
-} />
-<Route path="/chat/" element={
-  <ProtectedRoute>
-    <ChatPage />
-  </ProtectedRoute>
-} />
+        <Route
+          path="/signup"
+          element={
+            <PublicOnlyRoute>
+              <SignupPage />
+            </PublicOnlyRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat/"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer />
