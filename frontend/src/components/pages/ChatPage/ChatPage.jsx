@@ -74,7 +74,7 @@ const ChatPage = () => {
           }}
         />
 
-        <div className="col p-0 h-100">
+        <div className="col p-0 h-100 d-flex flex-column">
           <ChatHeader activeChannel={activeChannel} count={messages.length} />
           <MessagesList messages={messages} user={user} />
           <MessageInput

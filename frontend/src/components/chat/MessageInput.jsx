@@ -23,13 +23,18 @@ const MessageInput = ({ onSend, loading, activeChannelName }) => {
     <div className="mt-auto px-5 py-3">
       <form
         className="py-1 border rounded-2"
-        onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend();
+        }}
       >
         <div className="input-group has-validation">
           <input
             name="body"
             aria-label={t('chat.messageInputLabel')}
-            placeholder={t('chat.inputPlaceholder', { channelName: activeChannelName || 'general' })}
+            placeholder={t('chat.inputPlaceholder', {
+              channelName: activeChannelName || 'general',
+            })}
             className="border-0 p-0 ps-2 form-control"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
@@ -38,7 +43,7 @@ const MessageInput = ({ onSend, loading, activeChannelName }) => {
           <button
             type="submit"
             disabled={!newMessage.trim() || loading}
-            className="btn btn-group-vertical"
+            className="btn btn-primary btn-group-vertical"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
