@@ -56,7 +56,11 @@
     "channelName": "Имя канала",
     "newChannelName": "Новое имя канала",
     "channelPlaceholder": "Введите имя канала",
-    "menu": "Управление каналом"
+    "menu": "Управление каналом",
+    "messagesCount_one": "{{count}} сообщение",
+    "messagesCount_few": "{{count}} сообщения",
+    "messagesCount_many": "{{count}} сообщений",
+    "messagesCount_other": "{{count}} сообщений"
   },
   "errors": {
     "login": "Ошибка входа",

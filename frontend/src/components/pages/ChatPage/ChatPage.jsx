@@ -31,6 +31,7 @@ const ChatPage = () => {
   useEffect(() => {
     loadChannels();
   }, []);
+
   useEffect(() => {
     if (activeChannelId) loadMessages();
   }, [activeChannelId]);
@@ -74,7 +75,7 @@ const ChatPage = () => {
         />
 
         <div className="col p-0 h-100">
-          <ChatHeader activeChannel={activeChannel} />
+          <ChatHeader activeChannel={activeChannel} count={messages.length} />
           <MessagesList messages={messages} user={user} />
           <MessageInput
             onSend={sendMessage}
