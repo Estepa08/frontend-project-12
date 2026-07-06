@@ -10,7 +10,7 @@ const ChatHeader = ({ activeChannel, count }) => {
         <b># {activeChannel?.name}</b>
       </p>
       <span className="text-muted">
-        {t('chat.messagesCount', { count: count })}
+        {t('channels.messagesCount', { count: count })}
       </span>
     </div>
   );
