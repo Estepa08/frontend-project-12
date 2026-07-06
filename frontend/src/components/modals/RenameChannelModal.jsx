@@ -1,23 +1,12 @@
 // frontend/src/components/modals/RenameChannelModal.jsx
 import { useEffect, useRef } from 'react';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { createChannelSchema } from '../../validation/schemas.js';
 
 const RenameChannelModal = ({ isOpen, onClose, onSubmit, existingNames, currentName, isLoading }) => {
   const { t } = useTranslation();
   const inputRef = useRef(null);
-
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, t('validation.channelNameLength'))
-      .max(20, t('validation.channelNameLength'))
-      .notOneOf(
-        existingNames.filter((n) => n !== currentName),
-        t('validation.channelNameUnique')
-      )
-      .required(t('validation.required')),
-  });
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
@@ -26,7 +15,11 @@ const RenameChannelModal = ({ isOpen, onClose, onSubmit, existingNames, currentN
   if (!isOpen) return null;
 
   return (
-    <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div
+      className="modal show d-block"
+      tabIndex="-1"
+      style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -36,7 +29,7 @@ const RenameChannelModal = ({ isOpen, onClose, onSubmit, existingNames, currentN
 
           <Formik
             initialValues={{ name: currentName || '' }}
-            validationSchema={validationSchema}
+            validationSchema={createChannelSchema(existingNames.filter((n) => n !== currentName))}
             enableReinitialize
             onSubmit={async (values, { setSubmitting }) => {
               await onSubmit(values.name.trim());

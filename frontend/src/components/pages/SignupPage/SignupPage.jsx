@@ -2,27 +2,14 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
 import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { signupSchema } from '../../../validation/schemas.js';
 
 const SignupPage = () => {
   const { t } = useTranslation();
   const { signup, isAuthenticated, loading, error } = useAuth();
   const navigate = useNavigate();
-
-  const validationSchema = Yup.object({
-    username: Yup.string()
-      .min(3, t('validation.usernameLength'))
-      .max(20, t('validation.usernameLength'))
-      .required(t('validation.required')),
-    password: Yup.string()
-      .min(6, t('validation.passwordLength'))
-      .required(t('validation.required')),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password')], t('validation.passwordsMatch'))
-      .required(t('validation.required')),
-  });
 
   useEffect(() => {
     if (isAuthenticated) navigate('/chat/');
@@ -54,7 +41,7 @@ const SignupPage = () => {
 
               <Formik
                 initialValues={{ username: '', password: '', confirmPassword: '' }}
-                validationSchema={validationSchema}
+                validationSchema={signupSchema}
                 onSubmit={handleSubmit}
               >
                 {({ errors, touched, isSubmitting }) => (

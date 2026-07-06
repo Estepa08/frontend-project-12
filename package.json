@@ -21,8 +21,6 @@
     "install:frontend": "cd frontend && npm install"
   },
   "dependencies": {
-    "@ant-design/icons": "^6.2.5",
-    "@hexlet/chat-server": "^2.0.4",
-    "antd": "^6.4.5"
+    "@hexlet/chat-server": "^2.0.4"
   }
 }

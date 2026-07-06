@@ -1,20 +1,13 @@
 // frontend/src/components/modals/AddChannelModal.jsx
 import { useEffect, useRef } from 'react';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { createChannelSchema } from '../../validation/schemas.js';
 
 const AddChannelModal = ({ isOpen, onClose, onSubmit, existingNames, isLoading }) => {
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, t('validation.channelNameLength'))
-      .max(20, t('validation.channelNameLength'))
-      .notOneOf(existingNames, t('validation.channelNameUnique'))
-      .required(t('validation.required')),
-  });
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
@@ -23,7 +16,11 @@ const AddChannelModal = ({ isOpen, onClose, onSubmit, existingNames, isLoading }
   if (!isOpen) return null;
 
   return (
-    <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div
+      className="modal show d-block"
+      tabIndex="-1"
+      style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -33,7 +30,7 @@ const AddChannelModal = ({ isOpen, onClose, onSubmit, existingNames, isLoading }
 
           <Formik
             initialValues={{ name: '' }}
-            validationSchema={validationSchema}
+            validationSchema={createChannelSchema(existingNames)}
             onSubmit={async (values, { setSubmitting }) => {
               await onSubmit(values.name.trim());
               setSubmitting(false);
