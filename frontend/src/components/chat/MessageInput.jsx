@@ -31,6 +31,7 @@ const MessageInput = ({ onSend, loading, activeChannelName }) => {
         <div className="input-group has-validation">
           <input
             name="body"
+            autoComplete="off"
             aria-label={t('chat.messageInputLabel')}
             placeholder={t('chat.inputPlaceholder', {
               channelName: activeChannelName || 'general',
