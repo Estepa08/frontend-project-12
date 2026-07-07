@@ -29,7 +29,14 @@ const AppLayout = () => {
       {!isChatPage && <AppHeader />}
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <LoginPage />
+            </PublicOnlyRoute>
+          }
+        />
         <Route
           path="/signup"
           element={

@@ -9,7 +9,7 @@ const NotFoundPage = () => {
       <h1 className="display-1">404</h1>
       <p className="lead">{t('errors.notFound')}</p>
       <Link to="/" className="btn btn-primary">
-        Вернуться на главную
+        {t('backToHome')}
       </Link>
     </div>
   );

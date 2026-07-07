@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-const PublicOnlyRoute = ({ children }) => {
+const PublicOnlyRoute = ({ children }) => { 
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {

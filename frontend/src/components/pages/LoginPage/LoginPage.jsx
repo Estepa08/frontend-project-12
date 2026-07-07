@@ -1,6 +1,5 @@
 // frontend/src/components/pages/LoginPage/LoginPage.jsx
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link  } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -8,13 +7,8 @@ import { loginSchema } from '../../../validation/schemas.js';
 
 const LoginPage = () => {
   const { t } = useTranslation();
-  const { login, isAuthenticated, loading, error } = useAuth();
-  const navigate = useNavigate();
+  const { login, loading, error } = useAuth();
 
-
-  useEffect(() => {
-    if (isAuthenticated) navigate('/chat');
-  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {

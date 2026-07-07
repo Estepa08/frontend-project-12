@@ -1,5 +1,6 @@
 {
   "appName": "Hexlet Chat",
+  "backToHome": "Вернуться на главную",
   "logout": "Выйти",
   "login": {
     "title": "Войти",
