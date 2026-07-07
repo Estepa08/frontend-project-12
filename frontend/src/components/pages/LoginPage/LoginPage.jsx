@@ -1,5 +1,5 @@
 // frontend/src/components/pages/LoginPage/LoginPage.jsx
-import { Link  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,6 @@ import { loginSchema } from '../../../validation/schemas.js';
 const LoginPage = () => {
   const { t } = useTranslation();
   const { login, loading, error } = useAuth();
-
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
@@ -46,6 +45,7 @@ const LoginPage = () => {
                         id="username"
                         name="username"
                         type="text"
+                        autoComplete="off"
                         placeholder={t('login.username')}
                         className={`form-control ${errors.username && touched.username ? 'is-invalid' : ''}`}
                       />
@@ -60,6 +60,7 @@ const LoginPage = () => {
                         id="password"
                         name="password"
                         type="password"
+                        autoComplete="off"
                         placeholder={t('login.password')}
                         className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}
                       />

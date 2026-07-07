@@ -47,6 +47,7 @@ const SignupPage = () => {
                         id="username"
                         name="username"
                         type="text"
+                        autoComplete="off"
                         placeholder={t('signup.username')}
                         className={`form-control ${errors.username && touched.username ? 'is-invalid' : ''}`}
                       />
@@ -61,6 +62,7 @@ const SignupPage = () => {
                         id="password"
                         name="password"
                         type="password"
+                        autoComplete="off"
                         placeholder={t('signup.password')}
                         className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}
                       />
