@@ -1,6 +1,7 @@
 // frontend/src/components/pages/ChatPage/ChatPage.jsx
 import { useState, useEffect } from 'react';
 import { useChat } from '../../../hooks/useChat';
+import { useAutoScroll } from '../../../hooks/useAutoScroll';
 import ChannelsSidebar from '../../chat/ChannelsSidebar';
 import ChatHeader from '../../chat/ChatHeader';
 import MessagesList from '../../chat/MessagesList';
@@ -27,6 +28,8 @@ const ChatPage = () => {
     loading,
     user,
   } = useChat();
+
+  const messagesEndRef = useAutoScroll(messages);
 
   useEffect(() => {
     loadChannels();
@@ -76,7 +79,7 @@ const ChatPage = () => {
 
         <div className="col p-0 h-100 d-flex flex-column">
           <ChatHeader activeChannel={activeChannel} count={messages.length} />
-          <MessagesList messages={messages} user={user} />
+          <MessagesList messages={messages} user={user} messagesEndRef={messagesEndRef} />
           <MessageInput
             key={activeChannelId}
             onSend={sendMessage}
