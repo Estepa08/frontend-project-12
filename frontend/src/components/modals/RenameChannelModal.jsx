@@ -1,16 +1,15 @@
 // frontend/src/components/modals/RenameChannelModal.jsx
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { createChannelSchema } from '../../validation/schemas.js';
+import useModalAutoFocus from '../../hooks/useModalAutoFocus.js';
 
 const RenameChannelModal = ({ isOpen, onClose, onSubmit, existingNames, currentName, isLoading }) => {
   const { t } = useTranslation();
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
-  }, [isOpen]);
+  useModalAutoFocus(inputRef, isOpen);
 
   if (!isOpen) return null;
 
