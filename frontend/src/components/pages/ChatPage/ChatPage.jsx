@@ -78,6 +78,7 @@ const ChatPage = () => {
           <ChatHeader activeChannel={activeChannel} count={messages.length} />
           <MessagesList messages={messages} user={user} />
           <MessageInput
+            key={activeChannelId}
             onSend={sendMessage}
             loading={loading}
             activeChannelName={activeChannel?.name}
